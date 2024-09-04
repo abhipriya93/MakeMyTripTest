@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="make my trip regresiion" verbose="4" thread-count="2"
+	parallel="tests">
+
+	<listeners>
+		<listener class-name="com.qa.makemytrip.listeners.TestAllureListener"></listener>
+		<listener class-name="com.qa.makemytrip.listeners.ExtentReportListener"></listener>
+		<listener class-name="com.qa.makemytrip.listeners.AnnotationTransformer"></listener>
+	</listeners>
+
+	<test name="makemytrip home">
+		<classes>
+            <class name="com.qa.makemytrip.tests.HomePageTest"></class>
+		</classes>
+	</test>
+
+
+</suite>
