@@ -19,7 +19,8 @@ public class BaseTest {
 	
 	public HomePage homePage;
 	public PrivacyPolicy policy;
-		
+
+	//This will start the browser for all tests
 	@BeforeTest
 	public void setup()
 	{
@@ -32,7 +33,7 @@ public class BaseTest {
 	@AfterTest
 	public void tearDown()
 	{
-		//driver.quit();
+		driver.quit();
 	}
 	
 
