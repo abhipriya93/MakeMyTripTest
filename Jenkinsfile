@@ -2,25 +2,51 @@ pipeline
 {
     agent any
     
+    tools{
+		maven 'Maven 3.9.9'
+	}
+    
     stages{
-        stage("Build"){
+        stage("Regression Automation"){
             steps{
-                echo("Building the project")
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE')
+                {
+					git 'https://github.com/abhipriya93/MakeMyTripTest'
+					sh "mvn clean install"
+				}
             }
         }
-        stage("Run Smoke Test"){
+        stage("Publish Allure Report"){
             steps{
-                echo("Run the tests")
+                script{
+					allure([
+						includeProperties: false,
+						jdk: ''.
+						properties: [].
+						reportBuildPolicy: 'ALWAYS',
+						results: [[path: '/allure-results']]
+					]
+						
+					)
+				}
             }
         }
-        stage("Deploy to QA"){
+        stage("Publish Extent Report"){
             steps{
-                echo("deploy dev")
+                publishHTML(
+					[allowMissing: false,
+					 keepAll: false,
+					 reportDir: 'build',
+					 reportFiles: 'TestExecutionReport.html',
+					 reportTitles: ''
+						
+					]
+				)
             }
         }
-        stage("Generate Report"){
+        stage("Production Ready"){
             steps{
-                echo("Generate the test reports")
+                echo("Build is ready for production")
             }
         }
     }
