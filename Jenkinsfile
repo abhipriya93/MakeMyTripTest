@@ -37,9 +37,9 @@ pipeline
 					 keepAll: false,
 					 reportDir: 'build',
 					 reportFiles: 'TestExecutionReport.html',
-					 reportTitles: ''],
+					 reportTitles: '',
 					 reportName: 'Extent Report',
-					 alwaysLinkToLastBuild: false)
+					 alwaysLinkToLastBuild: false])
             }
         }
         stage("Production Ready"){
