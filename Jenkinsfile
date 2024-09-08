@@ -21,8 +21,8 @@ pipeline
                 script{
 					allure([
 						includeProperties: false,
-						jdk: ''.
-						properties: [].
+						jdk: '',
+						properties: [],
 						reportBuildPolicy: 'ALWAYS',
 						results: [[path: '/allure-results']]
 					]
