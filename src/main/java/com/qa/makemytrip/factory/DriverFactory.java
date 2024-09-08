@@ -36,7 +36,6 @@ public class DriverFactory {
 	  */
 	 public WebDriver init_driver(Properties prop)
 	 {
-		 //comment
          om=new OptionsManager(prop);
 		 if( prop.getProperty("browser").trim().equalsIgnoreCase("chrome"))
 		 {
