@@ -9,11 +9,10 @@ pipeline
     stages{
         stage("Regression Automation"){
             steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE')
-                {
-					git 'https://github.com/abhipriya93/MakeMyTripTest'
-					sh "mvn clean install"
-				}
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/abhipriya93/MakeMyTripTest.git'
+                    sh "mvn clean install"       
+                }
             }
         }
         stage("Publish Allure Report"){
