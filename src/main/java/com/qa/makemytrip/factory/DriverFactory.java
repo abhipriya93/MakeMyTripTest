@@ -50,7 +50,6 @@ public class DriverFactory {
 				// driver=new ChromeDriver(om.getChromeOptions());
 				tlDriver.set(new ChromeDriver(om.getChromeOptions()));
 			       }
-			
 		}
 		if (prop.getProperty("browser").trim().equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
