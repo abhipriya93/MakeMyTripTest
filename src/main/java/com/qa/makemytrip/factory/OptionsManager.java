@@ -3,11 +3,13 @@ package com.qa.makemytrip.factory;
 import java.util.Properties;
 
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class OptionsManager {
 
 	private Properties prop;
 	private ChromeOptions co;
+	private FirefoxOptions fo;
 	
 	public OptionsManager(Properties prop)
 	{
@@ -17,6 +19,12 @@ public class OptionsManager {
 	public ChromeOptions getChromeOptions()
 	{
 		co=new ChromeOptions();
+		
+		if(Boolean.parseBoolean(prop.getProperty("remote")))
+		{
+			co.setCapability("enableVNC", true);
+		}
+		
 		if(Boolean.parseBoolean(prop.getProperty("headless")))
 		{
 			co.addArguments("--headless");
@@ -27,5 +35,26 @@ public class OptionsManager {
 		}
 		
 		return co;
+	}
+	
+	public FirefoxOptions getFirefoxOptions()
+	{
+		fo=new FirefoxOptions();
+		
+		if(Boolean.parseBoolean(prop.getProperty("remote")))
+		{
+			co.setCapability("enableVNC", true);
+		}
+		
+		if(Boolean.parseBoolean(prop.getProperty("headless")))
+		{
+			fo.addArguments("--headless");
+		}
+		if(Boolean.parseBoolean(prop.getProperty("incognito")))
+		{
+			fo.addArguments("--incognito");
+		}
+		
+		return fo;
 	}
 }
