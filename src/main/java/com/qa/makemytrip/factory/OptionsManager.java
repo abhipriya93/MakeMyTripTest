@@ -1,5 +1,6 @@
 package com.qa.makemytrip.factory;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -22,7 +23,9 @@ public class OptionsManager {
 		
 		if(Boolean.parseBoolean(prop.getProperty("remote")))
 		{
-			co.setCapability("enableVNC", true);
+			co.setCapability("browserName", "chrome");
+			co.setBrowserVersion("126.0");
+			
 		}
 		
 		if(Boolean.parseBoolean(prop.getProperty("headless")))
@@ -33,7 +36,12 @@ public class OptionsManager {
 		{
 			co.addArguments("--incognito");
 		}
-		
+		co.setCapability("selenoid:options", new HashMap<String, Object>() {{
+		   
+
+		    /* How to enable VNC */
+		    put("enableVNC", true);
+		}});
 		return co;
 	}
 	

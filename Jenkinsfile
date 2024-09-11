@@ -20,7 +20,7 @@ pipeline
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/abhipriya93/MakeMyTripTest.git'
-                    bat "mvn clean install"
+                    sh "mvn clean install"
                     
                 }
             }

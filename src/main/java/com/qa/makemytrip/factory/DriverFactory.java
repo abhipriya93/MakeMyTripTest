@@ -1,5 +1,17 @@
 package com.qa.makemytrip.factory;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,119 +20,165 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import com.qa.makemytrip.exceptions.FrameworkException;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
-
-/*
- * This class will initialize the webdriver and launch the browser
- * 
- */
-
 public class DriverFactory {
 
 	WebDriver driver;
 	Properties prop;
-	OptionsManager om;
-	
+	OptionsManager optinonsManager;
+
 	public static ThreadLocal<WebDriver> tlDriver = new ThreadLocal<WebDriver>();
 
-	/*
-	 * This method will initialize webdriver and return webDriver object
+	/**
+	 * this method is used to initialize the webdriver on the basis of given browser
+	 * name
 	 * 
-	 * @param browserName
-	 * 
-	 * @return WebDriver
+	 * @param
+	 * @return it returns driver
 	 */
 	public WebDriver init_driver(Properties prop) {
-		om = new OptionsManager(prop);
-		if (prop.getProperty("browser").trim().equalsIgnoreCase("chrome")) {
+
+		String browserName = prop.getProperty("browser").trim();
+
+		// String browserName = System.getProperty("browser");
+
+		optinonsManager = new OptionsManager(prop);
+
+		System.out.println("browser name is : " + browserName);
+		if (browserName.equalsIgnoreCase("chrome")) {
+
 			if (Boolean.parseBoolean(prop.getProperty("remote"))) {
+				// remote execution on docker/cloud:
 				init_remoteDriver("chrome");
 			} else {
+				// local execution:
 				WebDriverManager.chromedriver().setup();
+				tlDriver.set(new ChromeDriver(optinonsManager.getChromeOptions()));
+			}
 
-				// driver=new ChromeDriver(om.getChromeOptions());
-				tlDriver.set(new ChromeDriver(om.getChromeOptions()));
-			       }
 		}
-		if (prop.getProperty("browser").trim().equalsIgnoreCase("firefox")) {
+
+		else if (browserName.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
-			// driver=new ChromeDriver(om.getChromeOptions());
-			tlDriver.set(new ChromeDriver(om.getChromeOptions()));
-		} else {
-			System.out.println("Please provide correct browser name");
+			tlDriver.set(new FirefoxDriver(optinonsManager.getFirefoxOptions()));
+
 		}
+
+		else if (browserName.equalsIgnoreCase("safari")) {
+			// driver = new SafariDriver();
+			tlDriver.set(new SafariDriver());
+
+		} else {
+			System.out.println("Please pass the right browser : " + browserName);
+		}
+
 		getDriver().manage().deleteAllCookies();
 		getDriver().manage().window().maximize();
 		getDriver().get(prop.getProperty("url").trim());
+
 		return getDriver();
 	}
 
 	private void init_remoteDriver(String browserName) {
-		// TODO Auto-generated method stub
-             System.out.println("Running on remote machines "+browserName);
-	         try {
-	        	 if(browserName.equalsIgnoreCase("chrome"))
-	        	 {
-				tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),om.getChromeOptions()));
-	        	 }
-	        	 if(browserName.equalsIgnoreCase("firefox"))
-	        	 {
-				tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),om.getFirefoxOptions()));
-	        	 }
+
+		System.out.println("Running test cases on remote grid server: " + browserName);
+
+		if (browserName.equalsIgnoreCase("chrome")) {
+			try {
+				tlDriver.set(
+						new RemoteWebDriver(new URL(prop.getProperty("huburl")), optinonsManager.getChromeOptions()));
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+
+		else if (browserName.equalsIgnoreCase("firefox")) {
+			try {
+				tlDriver.set(
+						new RemoteWebDriver(new URL(prop.getProperty("huburl")), optinonsManager.getFirefoxOptions()));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
+	/**
+	 * get the thread local copy of driver
+	 * 
+	 * @return
+	 */
 	public static WebDriver getDriver() {
 		return tlDriver.get();
 	}
 
-	/*
-	 * This method will load the properties
+	/**
+	 * this method is used to initialize the properties
 	 */
 	public Properties init_prop() {
+
 		prop = new Properties();
 		FileInputStream ip = null;
 
+		// mvn clean install -Denv="naveen"
 		String envName = System.getProperty("env");
-		if (envName == null) {
-			System.out.println("No env is given..running on default");
-			envName = "default";
-		}
-		try {
+		System.out.println("Running tests on environment: " + envName);
 
-			if (envName.equalsIgnoreCase("default")) {
+		if (envName == null) {
+			System.out.println("No env is given....hence running it on QA enviornment");
+			try {
 				ip = new FileInputStream("./src/test/resource/config/config.properties");
-			} else if (envName.equalsIgnoreCase("qa")) {
-				ip = new FileInputStream("./src/test/resource/config/qa.config.properties");
-			} else {
-				System.out.println("select correct environment");
-				throw new FrameworkException("no environment found exception");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
+		}
+
+		else {
+			try {
+				switch (envName.toLowerCase()) {
+				case "qa":
+					System.out.println("running it on QA env");
+					ip = new FileInputStream("./src/test/resource/config/config.properties");
+					break;
+				case "stage":
+					System.out.println("running it on stage env");
+					ip = new FileInputStream("./src/test/resource/config/stage.config.properties");
+					break;
+				case "dev":
+					System.out.println("running it on dev env");
+					ip = new FileInputStream("./src/test/resource/config/dev.config.properties");
+					break;
+				case "uat":
+					System.out.println("running it on uat env");
+					ip = new FileInputStream("./src/test/resource/config/uat.config.properties");
+					break;
+				case "prod":
+					System.out.println("running it on QA env");
+					ip = new FileInputStream("./src/test/resource/config/config.properties");
+					break;
+
+				default:
+					System.out.println("Please pass the right environment...." + envName);
+					//throw new FrameworkException("no env is found exception....");
+				// break;
+				}
+
+			} catch (Exception e) {
+
+			}
+
+		}
+
+		try {
 			prop.load(ip);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 		return prop;
 	}
 
 	/*
-	 * Take screenshot
+	 * take screenshot
 	 */
 	public String getScreenshot() {
 		File srcFile = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
@@ -129,7 +187,6 @@ public class DriverFactory {
 		try {
 			FileUtils.copyFile(srcFile, destination);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return path;
