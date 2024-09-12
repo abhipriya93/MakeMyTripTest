@@ -39,7 +39,7 @@ public class HomePageTest extends BaseTest {
 	@DataProvider
 	public String[] countryData()
 	{
-		return new String[]{"Baharin","India","Saint Barthélemy"};
+		return new String[]{"Bahrain","India","Saint Barthélemy"};
 	}
 	
 	@Test(dataProvider="countryData")

@@ -38,13 +38,6 @@ public class TestAllureListener extends DriverFactory implements ITestListener {
 	@Override
 	public void onStart(ITestContext iTestContext) {
 		System.out.println("I am in onStart method " + iTestContext.getName());
-		//iTestContext.setAttribute("WebDriver", BasePage.getDriver());
-		//WebDriver driver = BasePage.getDriver();
-		// Allure ScreenShotRobot and SaveTestLog
-		if (getDriver() instanceof WebDriver) {
-			System.out.println("Screenshot captured for test case:" + iTestContext.getName());
-			saveScreenshotPNG(getDriver());
-		}
 	}
 
 	@Override
