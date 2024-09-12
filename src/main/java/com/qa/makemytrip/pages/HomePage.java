@@ -101,11 +101,13 @@ public class HomePage {
 			if (countryName.contains(country)) {
 				jUtil.scrollToElement(e);
 				eUtil.performClick(e);
+				screenshot();
 				return true;
 			}
-			screenshot();
+			
 		}
 		System.out.println("Country " + country + " Not found on List");
+		screenshot();
 		return false;
 	}
 

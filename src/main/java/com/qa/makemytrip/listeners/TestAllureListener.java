@@ -43,28 +43,16 @@ public class TestAllureListener extends DriverFactory implements ITestListener {
 	@Override
 	public void onFinish(ITestContext iTestContext) {
 		System.out.println("I am in onFinish method " + iTestContext.getName());
-		if (getDriver() instanceof WebDriver) {
-			System.out.println("Screenshot captured for test case:" + iTestContext.getName());
-			saveScreenshotPNG(getDriver());
-		}
 	}
 
 	@Override
 	public void onTestStart(ITestResult iTestResult) {
 		System.out.println("I am in onTestStart method " + getTestMethodName(iTestResult) + " start");
-		if (getDriver() instanceof WebDriver) {
-			System.out.println("Screenshot captured for test case:" + getTestMethodName(iTestResult));
-			saveScreenshotPNG(getDriver());
-		}
 	}
 
 	@Override
 	public void onTestSuccess(ITestResult iTestResult) {
 		System.out.println("I am in onTestSuccess method " + getTestMethodName(iTestResult) + " succeed");
-		if (getDriver() instanceof WebDriver) {
-			System.out.println("Screenshot captured for test case:" + getTestMethodName(iTestResult));
-			saveScreenshotPNG(getDriver());
-		}
 	}
 
 	@Override
