@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -11,6 +13,7 @@ import com.qa.makemytrip.constants.Constants;
 import com.qa.makemytrip.util.ElementUtil;
 import com.qa.makemytrip.util.JavaScriptUtil;
 
+import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 
 public class HomePage {
@@ -86,6 +89,7 @@ public class HomePage {
 	public boolean selectCountryFromAllCountries(String country) {
 		WebElement defaultCon = eUtil.waitForElementVisible(defaultCountry, Constants.DEFAULT_ELEMENT_TIME_OUT);
 		eUtil.performClick(defaultCon);
+		screenshot();
 		List<WebElement> countryList = eUtil.getElements(countryDropdownName);
 		return selectCountryFromDropdown(countryList,country);
 	}
@@ -99,6 +103,7 @@ public class HomePage {
 				eUtil.performClick(e);
 				return true;
 			}
+			screenshot();
 		}
 		System.out.println("Country " + country + " Not found on List");
 		return false;
@@ -162,5 +167,10 @@ public class HomePage {
 			return true;
 		}
 		return false;
+	}
+	
+	@Attachment(value = "Screenshot", type = "image/png")
+	public byte[] screenshot() {
+	    return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 	}
 }

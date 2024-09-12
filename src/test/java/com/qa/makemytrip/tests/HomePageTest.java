@@ -46,7 +46,6 @@ public class HomePageTest extends BaseTest {
 	public void selectCountry(String country)
 	{
 		Assert.assertEquals(true,homePage.selectCountryFromAllCountries(country));
-		screenshot();
 	}
 	
 	@Test
