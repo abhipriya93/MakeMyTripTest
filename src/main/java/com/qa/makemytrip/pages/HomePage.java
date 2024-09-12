@@ -89,7 +89,7 @@ public class HomePage {
 	public boolean selectCountryFromAllCountries(String country) {
 		WebElement defaultCon = eUtil.waitForElementVisible(defaultCountry, Constants.DEFAULT_ELEMENT_TIME_OUT);
 		eUtil.performClick(defaultCon);
-		screenshot();
+		eUtil.screenshot();
 		List<WebElement> countryList = eUtil.getElements(countryDropdownName);
 		return selectCountryFromDropdown(countryList,country);
 	}
@@ -101,13 +101,13 @@ public class HomePage {
 			if (countryName.contains(country)) {
 				jUtil.scrollToElement(e);
 				eUtil.performClick(e);
-				screenshot();
+				eUtil.screenshot();
 				return true;
 			}
 			
 		}
 		System.out.println("Country " + country + " Not found on List");
-		screenshot();
+		eUtil.screenshot();
 		return false;
 	}
 
@@ -171,8 +171,4 @@ public class HomePage {
 		return false;
 	}
 	
-	@Attachment(value = "Screenshot", type = "image/png")
-	public byte[] screenshot() {
-	    return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-	}
 }

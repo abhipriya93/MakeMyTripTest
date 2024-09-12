@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.qameta.allure.Attachment;
 
 public class ElementUtil {
 	
@@ -129,5 +133,10 @@ private WebDriver driver;
 	{
 		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(timeout));
 		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+	}
+	
+	@Attachment(value = "Screenshot", type = "image/png")
+	public byte[] screenshot() {
+	    return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 	}
 }
