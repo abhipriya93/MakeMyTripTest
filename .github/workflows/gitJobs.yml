@@ -38,7 +38,7 @@ jobs:
         allure generate target/allure-results --clean -o target/allure-report
 
     - name: Upload Allure Report as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3/node20
       with:
         name: allure-report
         path: target/allure-report
