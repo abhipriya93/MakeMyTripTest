@@ -1,4 +1,4 @@
-name: Publish Allure Report to GitHub Pages
+name: Regression Job
 
 on:
   workflow_dispatch:  # Trigger manually from GitHub UI
